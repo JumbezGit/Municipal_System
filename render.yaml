@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: municipal-tax-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn municipal_tax.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: municipal-tax-backend.onrender.com
+      - key: FRONTEND_URL
+        value: https://your-frontend.vercel.app
+      - key: DATABASE_URL
+        fromDatabase:
+          name: municipal-tax-db
+          property: connectionString
+
+databases:
+  - name: municipal-tax-db
+    plan: free
